@@ -2,7 +2,7 @@
 #define DUNGEONMAKER_H
 
 #include <stdio.h>
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <time.h>
 
 #define SCREEN_WIDTH (int) 640
@@ -12,8 +12,6 @@
 SDL_Window* gWindow = NULL;
 
 SDL_Surface* gScreenSurface = NULL;
-
-SDL_Surface* gHelloWorld = NULL;
 
 SDL_Renderer * renderer = NULL;
 

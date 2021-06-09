@@ -1,8 +1,6 @@
 #include "DungeonMaker.h"
 
 void destroy(){
-    SDL_FreeSurface(gHelloWorld);
-    gHelloWorld = NULL;
 
     SDL_DestroyWindow(gWindow);
     gWindow = NULL;
@@ -12,8 +10,8 @@ void destroy(){
 
 void save(){
     FILE *ptr = fopen("save.hex", "w");
-    for (int x = 0; x<20; x++){
-        for (int y = 0; y<20; y++){
+    for (int x = 0; x<11; x++){
+        for (int y = 0; y<11; y++){
             fputc(positions[x][y], ptr);
         }
     }
@@ -22,8 +20,8 @@ void save(){
 
 void load(){
     FILE *ptr = fopen("save.hex", "r");
-    for (int x = 0; x<20; x++){
-        for (int y = 0; y<20; y++){
+    for (int x = 0; x<11; x++){
+        for (int y = 0; y<11; y++){
             positions[x][y] = fgetc(ptr);
         }
     }
@@ -46,8 +44,6 @@ void init(){
         destroy();
         exit(1);
     }
-
-    gScreenSurface = SDL_GetWindowSurface(gWindow);
 
     // Initalize some random values
     currentBlock = Empty;
@@ -88,7 +84,6 @@ void loadImage(){
 
     D2TSur = SDL_LoadBMP("2DTurn.bmp");
     D2TTex = SDL_CreateTextureFromSurface(renderer, D2TSur);
-
 }
 
 int constantOfRatio = 40;
@@ -362,8 +357,9 @@ int main(int argc, char* args[]){
                     break;
             }
         }
-
-
+        Uint32 frameStart;
+        Uint32 frameTime;
+        frameStart = SDL_GetTicks();
         SDL_SetRenderDrawColor(renderer, 242, 242, 242, 255);
         SDL_RenderClear(renderer);
 
@@ -384,6 +380,10 @@ int main(int argc, char* args[]){
 
 
         SDL_RenderPresent(renderer);
+
+        frameTime = SDL_GetTicks() - frameStart;
+
+
 
         SDL_UpdateWindowSurface(gWindow);
 
