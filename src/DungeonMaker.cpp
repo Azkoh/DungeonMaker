@@ -48,6 +48,31 @@ void init(){
     }
 
     gScreenSurface = SDL_GetWindowSurface(gWindow);
+
+    // Initalize some random values
+    currentBlock = Empty;
+    quit = false;
+
+    D1ObjSize.x = 540;
+    D1ObjSize.y = 40;
+    D1ObjSize.w = 60;
+    D1ObjSize.h = 60;
+
+    D2ObjSize.x = 540;
+    D2ObjSize.y = 120;
+    D2ObjSize.w = 60;
+    D2ObjSize.h = 60;
+
+
+    DTObjSize.x = 540;
+    DTObjSize.y = 200;
+    DTObjSize.w = 60;
+    DTObjSize.h = 60;
+
+    D2TObjSize.x = 540;
+    D2TObjSize.y = 280;
+    D2TObjSize.w = 60;
+    D2TObjSize.h = 60;
 }
 
 void loadImage(){
@@ -78,10 +103,8 @@ void renderGrid(){
             if (lastPos != &positions[y][x]){
                 constantOfRatio = 40;
                 center = 0;
-                printf("X: %d, Y: %d No Match\n", x,y);
             }
             else{
-                printf("It do match");
                 constantOfRatio = 30;
                 center = 5;
             }
@@ -142,9 +165,9 @@ void renderGrid(){
     }
 }
 
-int checkCollision(int mx, int my, int x, int y, int w, int h){
-    if ((mx >= x && mx <= x+w)){
-        if ((my >= y && my <= y+h)){
+int checkCollision(int mx, int my, SDL_Rect rct){
+    if ((mx >= rct.x && mx <= rct.x+rct.w)){
+        if ((my >= rct.y && my <= rct.y+rct.h)){
             return 1;
         }
     }
@@ -152,8 +175,6 @@ int checkCollision(int mx, int my, int x, int y, int w, int h){
         return 0;
     }
 }
-
-types currentBlock;
 
 void rotateSelected(int toLeft){
     if (toLeft == 0){
@@ -192,13 +213,17 @@ void rotateSelected(int toLeft){
                 break;
 
             case TurnRoom0:
-                *lastPos = (unsigned char) TurnRoom0;
-            case TurnRoom90:
                 *lastPos = (unsigned char) TurnRoom90;
-            case TurnRoom180:
+                break;
+            case TurnRoom90:
                 *lastPos = (unsigned char) TurnRoom180;
-            case TurnRoom270:
+                break;
+            case TurnRoom180:
                 *lastPos = (unsigned char) TurnRoom270;
+                break;
+            case TurnRoom270:
+                *lastPos = (unsigned char) TurnRoom0;
+                break;
         }
     }
     else{
@@ -256,39 +281,9 @@ void rotateSelected(int toLeft){
 int main(int argc, char* args[]){
     printf("Starting...");
 
-    rct.w = 40;
-    rct.h = 40;
-
-    currentBlock = Empty;
-    int x,y;
-
-    quit = false;
-
     init();
 
     loadImage();
-
-
-    D1ObjSize.x = 540;
-    D1ObjSize.y = 40;
-    D1ObjSize.w = 60;
-    D1ObjSize.h = 60;
-
-    D2ObjSize.x = 540;
-    D2ObjSize.y = 120;
-    D2ObjSize.w = 60;
-    D2ObjSize.h = 60;
-
-
-    DTObjSize.x = 540;
-    DTObjSize.y = 200;
-    DTObjSize.w = 60;
-    DTObjSize.h = 60;
-
-    D2TObjSize.x = 540;
-    D2TObjSize.y = 280;
-    D2TObjSize.w = 60;
-    D2TObjSize.h = 60;
 
     while (!quit){
         rct.w = 40;
@@ -318,18 +313,18 @@ int main(int argc, char* args[]){
                     }
                     break;
                 case SDL_MOUSEBUTTONDOWN:
-                    SDL_GetMouseState(&x, &y);
+                    SDL_GetMouseState(&mouseX, &mouseY);
 
-                    if (x <= 440 && y <=440){
+                    if (mouseX <= 440 && mouseY <=440){
                         if (e.button.button == SDL_BUTTON_LEFT){
-                            if (positions[y/40][x/40] == Empty || lastPos == &positions[y/40][x/40]){
-                                positions[y/40][x/40] = currentBlock;
+                            if (positions[mouseY/40][mouseX/40] == Empty || lastPos == &positions[mouseY/40][mouseX/40]){
+                                positions[mouseY/40][mouseX/40] = currentBlock;
                             }
                         }
                         else if(e.button.button == SDL_BUTTON_RIGHT){
-                            positions[y/40][x/40] = Empty;
+                            positions[mouseY/40][mouseX/40] = Empty;
                         }
-                        lastPos = &positions[y/40][x/40];
+                        lastPos = &positions[mouseY/40][mouseX/40];
                     }
                     else{
                         D1ObjSize.w = 60;
@@ -340,29 +335,25 @@ int main(int argc, char* args[]){
                         DTObjSize.h = 60;
                         D2TObjSize.w = 60;
                         D2TObjSize.h = 60;
-                        if (checkCollision(x,y, 540, 40,60,60) == 1){
+                        if (checkCollision(mouseX,mouseY, D1ObjSize) == 1){
                             currentBlock = EndRoom0;
                             D1ObjSize.w = 50;
                             D1ObjSize.h = 50;
-                            printf("YOU CLICKED ON D1\n");
                         }
-                        else if (checkCollision(x,y, 540, 120,60,60) == 1){
+                        else if (checkCollision(mouseX,mouseY, D2ObjSize) == 1){
                             currentBlock = Hallway0;
                             D2ObjSize.w = 50;
                             D2ObjSize.h = 50;
-                            printf("YOU CLICKED ON D2\n");
                         }
-                        else if (checkCollision(x,y, 540, 200,60,60) == 1){
+                        else if (checkCollision(mouseX,mouseY, DTObjSize) == 1){
                             currentBlock = TRoom0;
                             DTObjSize.w = 50;
                             DTObjSize.h = 50;
-                            printf("YOU CLICKED ON DT\n");
                         }
-                        else if (checkCollision(x,y, 540, 280,60,60) == 1){
+                        else if (checkCollision(mouseX,mouseY, D2TObjSize) == 1){
                             currentBlock = TurnRoom0;
                             D2TObjSize.w = 50;
                             D2TObjSize.h = 50;
-                            printf("YOU CLICKED ON D2T\n");
                         }
                     }
 

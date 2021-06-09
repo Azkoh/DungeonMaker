@@ -48,6 +48,9 @@ unsigned char *lastPos;
 
 bool quit;
 
+int mouseX;
+int mouseY;
+
 enum types{
     Empty,
     EndRoom0,
@@ -69,13 +72,16 @@ enum types{
     TurnRoom270
 };
 
+types currentBlock;
+
+
 void destroy();
 void save();
 void load();
 void init();
 void loadImage();
 void renderGrid();
-int checkCollision(int mx, int my, int x, int y, int w, int h);
+int checkCollision(int mx, int my, SDL_Rect rct);
 void rotateSelected(int toLeft);
 
 #endif // DUNGEONMAKER_H
