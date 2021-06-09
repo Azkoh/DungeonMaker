@@ -1,0 +1,7 @@
+# Just Some Stuffs so ignore
+*.o
+*.hex
+*.layout
+*.depend
+*.cbp
+DungeonMaker
