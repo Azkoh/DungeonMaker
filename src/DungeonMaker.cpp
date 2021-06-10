@@ -49,36 +49,46 @@ void init(){
     currentBlock = Empty;
     quit = false;
 
-    D1ObjSize.x = 540;
+    D1ObjSize.x = 510;
     D1ObjSize.y = 40;
     D1ObjSize.w = 60;
     D1ObjSize.h = 60;
 
-    D2ObjSize.x = 540;
+    D2ObjSize.x = 510;
     D2ObjSize.y = 120;
     D2ObjSize.w = 60;
     D2ObjSize.h = 60;
 
 
-    DTObjSize.x = 540;
+    DTObjSize.x = 510;
     DTObjSize.y = 200;
     DTObjSize.w = 60;
     DTObjSize.h = 60;
 
-    D2TObjSize.x = 540;
+    D2TObjSize.x = 510;
     D2TObjSize.y = 280;
     D2TObjSize.w = 60;
     D2TObjSize.h = 60;
 
-    TurnButtonObjSize.x = 580;
+    TurnButtonObjSize.x = 550;
     TurnButtonObjSize.y = 350;
     TurnButtonObjSize.w = 40;
     TurnButtonObjSize.h = 40;
 
-    XObjSize.x = 520;
+    XObjSize.x = 490;
     XObjSize.y = 350;
     XObjSize.w = 40;
     XObjSize.h = 40;
+
+    SavObjSize.x = 460;
+    SavObjSize.y = 420;
+    SavObjSize.w = 60;
+    SavObjSize.h = 40;
+
+    LoadObjSize.x = 560;
+    LoadObjSize.y = 420;
+    LoadObjSize.w = 60;
+    LoadObjSize.h = 40;
 }
 
 void loadImage(){
@@ -101,12 +111,20 @@ void loadImage(){
     XSur = SDL_LoadBMP("images/X.bmp");
     XTex = SDL_CreateTextureFromSurface(renderer, XSur);
 
+    SavSur = SDL_LoadBMP("images/save.bmp");
+    SavTex = SDL_CreateTextureFromSurface(renderer, SavSur);
+
+    LoadSur = SDL_LoadBMP("images/load.bmp");
+    LoadTex = SDL_CreateTextureFromSurface(renderer, LoadSur);
+
     free(D1Sur);
     free(D2Sur);
     free(DTSur);
     free(D2TSur);
     free(TurnSur);
     free(XSur);
+    free(SavSur);
+    free(LoadSur);
 }
 
 void renderGrid(){
@@ -330,6 +348,17 @@ int main(int argc, char* args[]){
                             XObjSize.h = 30;
                             *lastPos = 0;
                         }
+
+                        else if (checkCollision(mouseX,mouseY, SavObjSize) == 1){
+                            SavObjSize.w = 40;
+                            SavObjSize.h = 30;
+                            save();
+                        }
+                        else if (checkCollision(mouseX,mouseY, LoadObjSize) == 1){
+                            LoadObjSize.w = 40;
+                            LoadObjSize.h = 30;
+                            load();
+                        }
                     }
                     break;
                 case SDL_MOUSEBUTTONUP:
@@ -340,6 +369,14 @@ int main(int argc, char* args[]){
                     else if (XObjSize.w == 30){
                         XObjSize.w = 40;
                         XObjSize.h = 40;
+                    }
+                    else if (SavObjSize.w == 40){
+                        SavObjSize.w = 60;
+                        SavObjSize.h = 40;
+                    }
+                    else if (LoadObjSize.w == 40){
+                        LoadObjSize.w = 60;
+                        LoadObjSize.h = 40;
                     }
                     break;
                 default:
@@ -370,6 +407,10 @@ int main(int argc, char* args[]){
         SDL_RenderCopy(renderer, TurnTex, NULL,&TurnButtonObjSize);
 
         SDL_RenderCopy(renderer, XTex, NULL,&XObjSize);
+
+        SDL_RenderCopy(renderer, SavTex, NULL,&SavObjSize);
+
+        SDL_RenderCopy(renderer, LoadTex, NULL,&LoadObjSize);
 
 
         SDL_RenderPresent(renderer);

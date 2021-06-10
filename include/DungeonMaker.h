@@ -33,6 +33,12 @@ SDL_Texture * TurnTex;
 SDL_Surface * XSur;
 SDL_Texture * XTex;
 
+SDL_Surface * SavSur;
+SDL_Texture * SavTex;
+
+SDL_Surface * LoadSur;
+SDL_Texture * LoadTex;
+
 
 SDL_Event e;
 
@@ -49,6 +55,10 @@ SDL_Rect D2TObjSize;
 SDL_Rect TurnButtonObjSize;
 
 SDL_Rect XObjSize;
+
+SDL_Rect SavObjSize;
+
+SDL_Rect LoadObjSize;
 
 
 unsigned char positions[20][20];
