@@ -27,6 +27,13 @@ SDL_Texture * DTTex;
 SDL_Surface * D2TSur;
 SDL_Texture * D2TTex;
 
+SDL_Surface * TurnSur;
+SDL_Texture * TurnTex;
+
+SDL_Surface * XSur;
+SDL_Texture * XTex;
+
+
 SDL_Event e;
 
 SDL_Rect rct;
@@ -39,6 +46,10 @@ SDL_Rect DTObjSize;
 
 SDL_Rect D2TObjSize;
 
+SDL_Rect TurnButtonObjSize;
+
+SDL_Rect XObjSize;
+
 
 unsigned char positions[20][20];
 
@@ -48,6 +59,9 @@ bool quit;
 
 int mouseX;
 int mouseY;
+
+int constantOfRatio;
+int center;
 
 enum types{
     Empty,
@@ -80,6 +94,6 @@ void init();
 void loadImage();
 void renderGrid();
 int checkCollision(int mx, int my, SDL_Rect rct);
-void rotateSelected(int toLeft);
+void rotateSelected();
 
 #endif // DUNGEONMAKER_H

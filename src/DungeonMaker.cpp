@@ -69,25 +69,45 @@ void init(){
     D2TObjSize.y = 280;
     D2TObjSize.w = 60;
     D2TObjSize.h = 60;
+
+    TurnButtonObjSize.x = 580;
+    TurnButtonObjSize.y = 350;
+    TurnButtonObjSize.w = 40;
+    TurnButtonObjSize.h = 40;
+
+    XObjSize.x = 520;
+    XObjSize.y = 350;
+    XObjSize.w = 40;
+    XObjSize.h = 40;
 }
 
 void loadImage(){
 
-    D1Sur = SDL_LoadBMP("1D.bmp");
+    D1Sur = SDL_LoadBMP("images/1D.bmp");
     D1Tex = SDL_CreateTextureFromSurface(renderer, D1Sur);
 
-    D2Sur = SDL_LoadBMP("2D.bmp");
+    D2Sur = SDL_LoadBMP("images/2D.bmp");
     D2Tex = SDL_CreateTextureFromSurface(renderer, D2Sur);
 
-    DTSur = SDL_LoadBMP("TD.bmp");
+    DTSur = SDL_LoadBMP("images/TD.bmp");
     DTTex = SDL_CreateTextureFromSurface(renderer, DTSur);
 
-    D2TSur = SDL_LoadBMP("2DTurn.bmp");
+    D2TSur = SDL_LoadBMP("images/2DTurn.bmp");
     D2TTex = SDL_CreateTextureFromSurface(renderer, D2TSur);
-}
 
-int constantOfRatio = 40;
-int center = 0;
+    TurnSur = SDL_LoadBMP("images/right.bmp");
+    TurnTex = SDL_CreateTextureFromSurface(renderer, TurnSur);
+
+    XSur = SDL_LoadBMP("images/X.bmp");
+    XTex = SDL_CreateTextureFromSurface(renderer, XSur);
+
+    free(D1Sur);
+    free(D2Sur);
+    free(DTSur);
+    free(D2TSur);
+    free(TurnSur);
+    free(XSur);
+}
 
 void renderGrid(){
     SDL_SetRenderDrawColor(renderer, 0,0,0,255);
@@ -171,8 +191,7 @@ int checkCollision(int mx, int my, SDL_Rect rct){
     }
 }
 
-void rotateSelected(int toLeft){
-    if (toLeft == 0){
+void rotateSelected(){
         switch (*lastPos){
             case EndRoom0:
                 *lastPos = (unsigned char) EndRoom90;
@@ -220,61 +239,14 @@ void rotateSelected(int toLeft){
                 *lastPos = (unsigned char) TurnRoom0;
                 break;
         }
-    }
-    else{
-        switch (*lastPos){
-            case EndRoom0:
-                *lastPos = (unsigned char) EndRoom270;
-                break;
-            case EndRoom270:
-                *lastPos = (unsigned char) EndRoom180;
-                break;
-            case EndRoom180:
-                *lastPos = (unsigned char) EndRoom90;
-                break;
-            case EndRoom90:
-                *lastPos = (unsigned char) EndRoom0;
-                break;
-
-            case Hallway0:
-                *lastPos = (unsigned char) Hallway90;
-                break;
-            case Hallway90:
-                *lastPos = (unsigned char) Hallway0;
-                break;
-
-            case TRoom0:
-                *lastPos = (unsigned char) TRoom270;
-                break;
-            case TRoom270:
-                *lastPos = (unsigned char) TRoom180;
-                break;
-            case TRoom180:
-                *lastPos = (unsigned char) TRoom90;
-                break;
-            case TRoom90:
-                *lastPos = (unsigned char) TRoom0;
-                break;
-
-            case TurnRoom0:
-                *lastPos = (unsigned char) TurnRoom270;
-                break;
-            case TurnRoom270:
-                *lastPos = (unsigned char) TurnRoom180;
-                break;
-            case TurnRoom180:
-                *lastPos = (unsigned char) TurnRoom90;
-                break;
-            case TurnRoom90:
-                *lastPos = (unsigned char) TurnRoom0;
-                break;
-        }
-    }
 
 }
 
 int main(int argc, char* args[]){
     printf("Starting...");
+
+    constantOfRatio = 40;
+    center = 0;
 
     init();
 
@@ -299,11 +271,8 @@ int main(int argc, char* args[]){
                         case SDLK_z:
                             *lastPos = 0;
                             break;
-                        case SDLK_LEFT:
-                            rotateSelected(1);
-                            break;
                         case SDLK_RIGHT:
-                            rotateSelected(0);
+                            rotateSelected();
                             break;
                     }
                     break;
@@ -350,8 +319,28 @@ int main(int argc, char* args[]){
                             D2TObjSize.w = 50;
                             D2TObjSize.h = 50;
                         }
-                    }
+                        else if (checkCollision(mouseX,mouseY, TurnButtonObjSize) == 1){
+                            TurnButtonObjSize.w = 30;
+                            TurnButtonObjSize.h = 30;
+                            rotateSelected();
+                        }
 
+                        else if (checkCollision(mouseX,mouseY, XObjSize) == 1){
+                            XObjSize.w = 30;
+                            XObjSize.h = 30;
+                            *lastPos = 0;
+                        }
+                    }
+                    break;
+                case SDL_MOUSEBUTTONUP:
+                    if (TurnButtonObjSize.w == 30){
+                        TurnButtonObjSize.w = 40;
+                        TurnButtonObjSize.h = 40;
+                    }
+                    else if (XObjSize.w == 30){
+                        XObjSize.w = 40;
+                        XObjSize.h = 40;
+                    }
                     break;
                 default:
                     break;
@@ -377,6 +366,10 @@ int main(int argc, char* args[]){
         SDL_RenderCopy(renderer, DTTex, NULL,&DTObjSize);
 
         SDL_RenderCopy(renderer, D2TTex, NULL,&D2TObjSize);
+
+        SDL_RenderCopy(renderer, TurnTex, NULL,&TurnButtonObjSize);
+
+        SDL_RenderCopy(renderer, XTex, NULL,&XObjSize);
 
 
         SDL_RenderPresent(renderer);
