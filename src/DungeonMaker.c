@@ -92,7 +92,7 @@ void init(){
     // Set the current block to empty
     currentBlock = Empty;
     // Don't quit
-    quit = false;
+    quit = 0;
 
     // Define all the sizes for all the clickable objects
     // TO-DO: Move all this to an object to be declared earlier
@@ -333,7 +333,7 @@ void mainLoop(){
             switch (e.type){
                 // Quit on, well, quit
                 case SDL_QUIT:
-                    quit = true;
+                    quit = 1;
                     break;
                 // Detect key presses
                 case SDL_KEYDOWN:

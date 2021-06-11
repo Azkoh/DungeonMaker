@@ -78,7 +78,7 @@ unsigned char positions[20][20];
 unsigned char *lastPos;
 
 // A simple boolean to determine if it is time to stop the application
-bool quit;
+int quit;
 
 // Used to store the mouse position during mouse events
 int mouseX;
@@ -113,8 +113,13 @@ enum types{
 };
 
 // To store the currently selected block
-types currentBlock;
+enum types currentBlock;
 
+typedef struct clickObj{
+    SDL_Rect rect;
+    enum types blockType;
+
+} clickObj;
 
 // Boring Method stuff
 void destroy();
